@@ -46,3 +46,9 @@ if __name__ == "__main__":
         port=5000,
         debug=True
     )
+
+
+@app.route("/add")
+def add():
+
+    return render_template("add_movement.html")
