@@ -27,7 +27,7 @@ def init_db():
         """)
     
     conn.commit()
-    conn.closet()
+    conn.close()
 
 
 app = Flask(__name__)
