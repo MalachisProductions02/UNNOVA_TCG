@@ -50,7 +50,8 @@ def add_movimiento(
         nombre,
         tipo,
         efectivo_ganado,
-        efectivo_gastado
+        efectivo_gastado,
+        notas
 ):
     
     conn = get_db()
@@ -63,15 +64,17 @@ def add_movimiento(
             nombre,
             tipo,
             efectivo_ganado,
-            efectivo_gastado
+            efectivo_gastado,
+            notas
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
 """,
 (
     nombre,
     tipo,
     efectivo_ganado,
-    efectivo_gastado
+    efectivo_gastado,
+    notas
 ))
     
     conn.commit()
@@ -123,6 +126,98 @@ def get_totales():
     }
 
 
+@app.route("/")
+def index():
+
+    tipo = request.args.get("tipo")
+    min_monto = request.args.get("min")
+    max_monto = request.args.get("max")
+    search = request.args.get("q")
+
+    query = "SELECT * FROM movimientos WHERE 1=1"
+    params = []
+
+    if tipo:
+        query += " AND tipo = ?"
+        params.append(tipo)
+
+    if min_monto:
+        query += " AND (efectivo_ganado + efectivo_gastado) >= ?"
+        params.append(min_monto)
+
+    if max_monto:
+        query += " AND (efectivo_ganado + efectivo_gastado) <= ?"
+        params.append(max_monto)
+
+    if search:
+        query += " AND (nombre LIKE ? OR notas LIKE ?)"
+        params.append(f"%{search}%")
+        params.append(f"%{search}%")
+
+    query += " ORDER BY fecha DESC"
+
+    conn = get_db()
+    movimientos = conn.execute(query, params).fetchall()
+    conn.close()
+
+    totales = get_totales()
+    movimientos = get_movimientos()
+
+    return render_template(
+        "index.html",
+        totales=totales,
+        movimientos=movimientos
+    )
+
+@app.route("/add", methods=["GET", "POST"])
+def add():
+
+    if request.method == "POST":
+
+        nombre = request.form["nombre"]
+        tipo = request.form["tipo"]
+        ganancia = float(request.form["efectivo_ganado"] or 0)
+        gasto = float(request.form["efectivo_gastado"] or 0)
+        notas = request.form.get("notas", "")
+
+
+        add_movimiento(
+            nombre,
+            tipo,
+            ganancia,
+            gasto,
+            notas
+        )
+
+        return redirect(url_for("index"))
+    return render_template("add_movement.htm")
+
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+
+    resultados = []
+
+    if request.method == "POST":
+        q = request.form.get("q", "")
+
+        conn = get_db()
+        cursor = conn.cursor()
+
+        cursor.execute(""" 
+            SELECT *
+            FROM movimientos
+            WHERE nombre LIKE ?
+            OR tipo LIKE ?
+            OR notas LIKE ?
+            ORDER BY fecha DESC
+        """, (f"%{q}%", f"%{q}%", f"%{q}%"))
+
+        resultados = cursor.fetchall()
+        conn.close()
+
+    return render_template("search.html", resultados=resultados)
+
 
 if __name__ == "__main__":
     print(os.path.abspath(DATABASE))
@@ -143,28 +238,32 @@ if __name__ == "__main__":
     "Lote Cartas Vualá",
     "Venta",
     100,
-    0
+    0,
+    "Venta del Sábado (Monto de Prueba)"
     )
 
     add_movimiento(
     "Chandeleur",
     "Venta",
     50,
-    0
+    0,
+    "Venta del Sábado (Monto de Prueba)"
     )
 
     add_movimiento(
     "Zacian EX",
     "Venta",
     10,
-    0
+    0,
+    "Venta del Sábado (Monto de Prueba)"
     )
 
     add_movimiento(
     "Mesa Plaza Fiesta",
     "Gasto",
     0,
-    150
+    150,
+    "Gasto de esta semana (Monto de Prueba)"
     )
 
     print(get_totales())
@@ -177,12 +276,3 @@ if __name__ == "__main__":
     )
 
 
-@app.route("/")
-def index():
-
-    return "Hello world!"
-
-@app.route("/add")
-def add():
-
-    return render_template("add_movement.html")

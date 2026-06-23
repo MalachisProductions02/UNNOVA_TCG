@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Buscar</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+
+        
+
+        <h2 class="add_title">Buscar movimiento... </h2>
+
+        <form method="POST" class="search-form">
+            <input type="text" name="q" placeholder="Busca por nombre, venta, gasto... ">
+            <button type="submit" class="btn bck-color">🔍︎ Buscar</button>
+            <a href="{{ url_for('index') }}" class="btn back-text">Regresar</a>
+        </form>
+
+        <hr>
+
+        {% for m in resultados %}
+        <div class="card">
+
+            <h3>{{ m["nombre"] }}</h3>
+            <p>Tipo: {{ m["tipo"] }}</p>
+            <p>Ganado: ${{ m["efectivo_ganado"] }}</p>
+            <p>Gastado: ${{ m["efectivo_gastado"] }}</p>
+            <p>Notas: {{ m["notas"] }}</p>
+            <small>{{ m["fecha"] }}</small>
+        </div>
+        {% endfor %}
+    </body>
+</html>

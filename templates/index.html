@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>UNNOVA TCG</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+
+    <body>
+
+        <div class="banner">
+            <img
+                src="{{ url_for('static', filename='UNNOVA TCG.png') }}"
+                alt="Banner"
+            >
+        </div>
+
+        <div class="container">
+
+            <h2>GANANCIAS</h2>
+            <h1>${{ totales["ganancias"] }}</h1>
+
+            <h3>Dinero guardado</h3>
+            <p>${{ totales["guardado"] }}</p>
+
+            <h3>Dinero gastado</h3>
+            <p>${{ totales["gastado"] }}</p>
+
+            <hr>
+
+            <h2>Movimientos</h2>
+
+            {% for m in movimientos %}
+
+                <div class="movimiento">
+
+                    <h3>{{ m["nombre"] }}</h3>
+
+                    <p>Tipo: {{ m["tipo"] }}</p>
+
+                    <p>Ganado: {{ m["efectivo_ganado"] }}</p>
+
+                    <p>Gastado: {{ m["efectivo_gastado"] }}</p>
+
+                    <p>Notas: {{ m["notas"] }}</p>
+
+                    <small>{{ m["fecha"] }}</small>
+                </div>
+
+            {% endfor %}
+
+        </div>
+        <a href="{{ url_for('search') }}" class="search-fab">🔍︎</a>
+        <a href="{{ url_for('add') }}" class="fab">+</a>
+    </body>
+</html>

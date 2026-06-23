@@ -1,57 +1,35 @@
-<!DOCTYPE html>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<h2 class="add_title">Agregar Movimiento</h2>
 
-<html>
+<form method="POST">
 
-<head>
-    <title>Agregar Movimiento</title>
-</head>
+    <input name="nombre" placeholder="Nombre del movimiento">
 
-<body>
+    <br><br>
 
-    <h1>Agregar Movimiento</h1>
+    <select name="tipo">
+        <option value="venta">Venta</option>
+        <option value="compra">Compra</option>
+        <option value="viatico">Viático</option>
+        <option value="gasto">Gasto</option>
+        <option value="intercambio">Intercambio</option>
+    </select>
 
-    <form>
+    <br><br>
 
-        <label>Nombre del movimiento</label>
-        <input type="text">
+    <input name="efectivo_ganado" placeholder="Efectivo ganado">
 
-        <br><br>
+    <br><br>
 
-        <label>Tipo de movimiento</label>
+    <input name="efectivo_gastado" placeholder="Efectivo gastado">
 
-        <select>
+    <br><br>
 
-            <option>Venta</option>
+    <textarea name="notas" placeholder="Notas"></textarea>
 
-            <option>Compra</option>
+    <br><br>
 
-            <option>Intercambio</option>
+    <button class="btn bck-color" type="submit">Guardar</button>
 
-            <option>Viático</option>
-
-            <option>Gasto</option>
-
-            <option>Aporte</option>
-
-        </select>
-
-        <br><br>
-
-        <label>Efectivo ganado $</label>
-        <input type="number">
-
-        <br><br>
-
-        <label>Efectivo gastado $</label>
-        <input type="number">
-
-        <br><br>
-
-        <button>
-            Guardar
-        </button>
-
-
-    </form>
-</body>
-</html>
+    <a href="{{ url_for('index') }}" class="btn back-text">Regresar</a>
+</form>
