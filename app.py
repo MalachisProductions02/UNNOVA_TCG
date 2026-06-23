@@ -234,40 +234,6 @@ if __name__ == "__main__":
 
     conn.close()
 
-    add_movimiento(
-    "Lote Cartas Vualá",
-    "Venta",
-    100,
-    0,
-    "Venta del Sábado (Monto de Prueba)"
-    )
-
-    add_movimiento(
-    "Chandeleur",
-    "Venta",
-    50,
-    0,
-    "Venta del Sábado (Monto de Prueba)"
-    )
-
-    add_movimiento(
-    "Zacian EX",
-    "Venta",
-    10,
-    0,
-    "Venta del Sábado (Monto de Prueba)"
-    )
-
-    add_movimiento(
-    "Mesa Plaza Fiesta",
-    "Gasto",
-    0,
-    150,
-    "Gasto de esta semana (Monto de Prueba)"
-    )
-
-    print(get_totales())
-
 
     app.run(
         host="0.0.0.0",
